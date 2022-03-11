@@ -15,12 +15,12 @@ For example with 8 steps and 4 hits the resulting pattern would be |x.x.x.| When
 The drum machine also has the ability to change the offset of the pattern which shifts the starting position of the pattern. For example the previous pattern with an offset of 1 would be |.x..x..x|. With an offset of 2 |x.x..x..|. With an offset of 3 |.x.x..x.| ect.  
 Below is an example of these patterns played on the drum machine with some more euclidean rhythms added later in the video.
 
-[![Euclidean Rhythm Examples](http://img.youtube.com/vi/eEuRsu0KcMs/0.jpg)](https://youtube.com/eEuRsu0KcMs "Euclidean Rhythm Examples")
+[![Euclidean Rhythm Examples](http://img.youtube.com/vi/eEuRsu0KcMs/0.jpg)](https://www.youtube.com/watch?v=eEuRsu0KcMs "Euclidean Rhythm Examples")
   
   
 ### Polyrhythms
 Polyrhythms are rhythms consisting of two or more parts that are not perceived to originate form the same time division or signiture. Polyrhythms are very common in Afro-Cuban and West African music both of which greatly inspired making this drum machine. A common polyrhythm found throught the world is the Hemiola. A hemiola consists of 4 even hits played over 4 even beats.  
 Below is an example of these patterns played on the drum machine with some more polyrhythms added later in the video.  
 
-[![Polyrhythm Examples](http://img.youtube.com/vi/n21XgvG8Wkc/0.jpg)](https://youtube.com/n21XgvG8Wkc "Polyrhythm Examples")
+[![Polyrhythm Examples](http://img.youtube.com/vi/n21XgvG8Wkc/0.jpg)](https://www.youtube.com/watch?v=n21XgvG8Wkc "Polyrhythm Examples")
 
