@@ -25,14 +25,14 @@ Below is an example of these patterns played on the drum machine with some more 
 [![Polyrhythm Examples](http://img.youtube.com/vi/n21XgvG8Wkc/0.jpg)](https://www.youtube.com/watch?v=n21XgvG8Wkc "Polyrhythm Examples")
 
 ### Features To Be Added 
-Tempo Control
-MIDI output 
-Master Volume 
-Load different samples from an SD card 
-ADSR envelope for each sample
-Allow for sequencing of multiple bars containing different patterns
-Patch bank that allows for storing/retrival of patterns
+Tempo Control  
+MIDI output   
+Master Volume   
+Load different samples from an SD card   
+ADSR envelope for each sample  
+Allow for sequencing of multiple bars containing different patterns  
+Patch bank that allows for storing/retrival of patterns  
 
-Schematics and detials on how to build/modify the project
+Schematics and detials on how to build/modify the project   
 
 
