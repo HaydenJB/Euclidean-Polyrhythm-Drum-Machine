@@ -4,7 +4,7 @@
 
 The main idea of this drum machine is to generate Eculidean Rhythms to easily create complex polyrhythmic drum sequences.
 
-The drum machine is made using a Teensy 4.0 and the Rev-D audio board avaliable from PRJC. (https://www.pjrc.com/store/teensy3_audio.html)
+The drum machine is made using a Teensy 4.0 and the Rev-D audio board avaliable from PRJC. (https://www.pjrc.com/store/teensy3_audio.html) As well as 4 rotary encoders with push buttons, two pushbuttons and a 16X2 Character LCD screen (schematics and build information to be added).
 
 ### Euclidean Rhythms
 Euclidean Rhythms are a set of rhythms that can be generated using Euclids Algorithm (https://en.wikipedia.org/wiki/Euclidean_algorithm) for computing the greatest common divisor of two numbers. Euclidan rhythms were first categorised by Computer Scientest Godfried Toussaint in his 2005 paper 'The Euclidean Algorithm Generates Traditional Musical Rhythms'. (The paper can be found here for a more in depth explination http://cgm.cs.mcgill.ca)
