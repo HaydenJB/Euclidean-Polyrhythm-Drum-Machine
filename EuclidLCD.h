@@ -20,7 +20,7 @@ class EuclidLCD {
         const int sequenceCol = 3;
         const int volumeRow = 1;
         const int volumeCol = 10;
-        
+        const int cursorRow = 1;
         // Character maps for rest and hit in sequencer mode
         const byte restChar[8] = {
             0b00000,
@@ -55,6 +55,7 @@ class EuclidLCD {
         void setVolume(uint16_t volume);
         void initStepSequencerMode(uint16_t pattern, uint16_t steps);
         void initEuclidMode(uint16_t steps, uint16_t hits, uint16_t offset);
+        void initVolMode(uint16_t sequence, uint16_t vol);
         void moveStepCursor(int num, uint16_t steps);
 };
 

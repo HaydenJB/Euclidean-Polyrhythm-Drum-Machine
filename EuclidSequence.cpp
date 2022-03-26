@@ -74,7 +74,7 @@ bool EuclidSequence::incrementHits(int value) {
 }
 
 bool EuclidSequence::incrementOffset(int value) {
-    if (value == 1 && patternOffset < steps) {
+    if (value == 1 && patternOffset < (steps-1)) {
         prevPattern = pattern;
         pattern = 0;
         prevSteps = steps;
@@ -128,11 +128,18 @@ void EuclidSequence::getPattern() {
             yPrev = yCur;
         }
         if (patternOffset) {
-            uint16_t upper = 0 | (pattern<<patternOffset);
-            uint16_t lower = 0 | (pattern>>(16-patternOffset));
-            pattern = 0 | (upper|lower);  
+            uint16_t temp = 0U;
+            // fill amoun
+            for (uint16_t i=0U; i<patternOffset; i++) {
+                temp |= 1U<<(steps-1-i);
+            }
+            temp &= pattern;
+            temp = temp >> (steps - patternOffset);
+            pattern = pattern << patternOffset;
+            pattern |= temp;
         }
     }
+    
 }
 
 void EuclidSequence::flipStep(uint16_t stepNum) {

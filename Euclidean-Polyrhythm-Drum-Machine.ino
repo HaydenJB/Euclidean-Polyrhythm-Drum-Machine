@@ -1,6 +1,6 @@
 /*
  * To Do
- * Fix pattern offset
+ * Add ability to load different samples from SD card
  */
 
 #include <Audio.h>
@@ -14,9 +14,7 @@
 #include <RotaryEncoderDebounce.h>
 #include <IntervalTimer.h>
 #include "EuclidSequence.h"
-
-
-#include "Euclid_LCD.h"
+#include "EuclidLCD.h"
 
 // GUItool: begin automatically generated code
 AudioPlayMemory          playMem1;       //xy=91.19999694824219,173
@@ -57,10 +55,6 @@ AudioControlSGTL5000     sgtl5000_1;     //xy=671.2000122070312,109
 #include "AudioSampleWoodmpc.h"
 
 #define NUM_TICKS  4000
-#define STEP_MODE 0
-#define HIT_MODE 1
-#define OFFSET_MODE 0
-#define VOL_MODE 1
 #define NUM_SAMPLES 8
 
 void playSamples();
@@ -98,13 +92,9 @@ Bounce prevSequenceButton = Bounce();
 EuclidLCD *lcd;
 
 // display mode for line 0
-bool euclidMode = true;
+bool volMode = true;
 
 void updateValues();
-
-
-
-
 
 void setup() {
     Serial.begin(19200);
@@ -173,41 +163,48 @@ void loop() {
 
 void updateValues() {
     // Update steps for current sequence
-    if (euclidMode) {
+    if (1) {
         // updates only if steps values changes
         if (currentSequence->incrementSteps(rotary1.read())){       
             Serial.println("Steps = " + String(currentSequence->steps));
             writeTickStates(currentSequence);
             lcd->setSteps(currentSequence->steps); 
+            if (!volMode) lcd->initStepSequencerMode(currentSequence->pattern, currentSequence->steps);
         }
+        
     }
 
     // Update hits for current sequence
-    if (euclidMode) {
+    if (1) {
         // updates only if hits values changes
         if (currentSequence->incrementHits(rotary2.read())){
             Serial.println("Hits = " + String(currentSequence->steps));
             writeTickStates(currentSequence);
-            lcd->setHits(currentSequence->hits);       
+            lcd->setHits(currentSequence->hits); 
+            if (!volMode) lcd->initStepSequencerMode(currentSequence->pattern, currentSequence->steps);      
         }
-    } else {
-        lcd->moveStepCursor(rotary2.read(), currentSequence->steps);
-    }
+        
+    } 
 
 
     // Update offset for current sequence
-    if (euclidMode) {
+    if (1) {
         // updates only if offset values changes
         if (currentSequence->incrementOffset(rotary3.read())){
-            Serial.println("Offset = " + String(currentSequence->steps));
+            //Serial.println("Offset = " + String(currentSequence->steps));
             writeTickStates(currentSequence);
-            lcd->setOffset(currentSequence->patternOffset);        
+            lcd->setOffset(currentSequence->patternOffset);  
+            for (int i=0; i < currentSequence->steps; i++) {
+                Serial.print((int)(currentSequence->getStep(i)));   
+            }
+            Serial.println(""); 
+            if (!volMode) lcd->initStepSequencerMode(currentSequence->pattern, currentSequence->steps);
         }
     }   
     
-    if (currentSequence->incrementVolume(rotary4.read())) {
+    if (volMode) {
+        currentSequence->incrementVolume(rotary4.read());
         if (currentSequence->number < 4) {
-            
             mixer1.gain(currentSequence->number, currentSequence->getVol());
         } else {
             
@@ -215,6 +212,8 @@ void updateValues() {
         }
 
         lcd->setVolume(currentSequence->volume);
+    } else {
+        lcd->moveStepCursor(rotary4.read(), currentSequence->steps);
     }
 
     nextSequenceButton.update();
@@ -228,8 +227,7 @@ void updateValues() {
         Serial.println("seqIncrement = " + String(sequenceIncrement));
         sequenceSelect += sequenceIncrement;
         if (sequenceSelect > 8) sequenceSelect = 1;
-        if (sequenceSelect < 1) sequenceSelect = 8;
-        lcd->setSequence(sequenceSelect);       
+        if (sequenceSelect < 1) sequenceSelect = 8;   
         switch (sequenceSelect) {
             case (1):
                 currentSequence = sequence1;
@@ -259,30 +257,33 @@ void updateValues() {
         sequenceIncrement = 0;
 
         // update display
-        if (euclidMode) {
-            lcd->initEuclidMode(currentSequence->steps, currentSequence->hits, currentSequence->patternOffset); 
+        if (volMode) {
+            lcd->setSequence(sequenceSelect);  
+            lcd->setVolume(currentSequence->volume);    
         } else {
             lcd->initStepSequencerMode(currentSequence->pattern, currentSequence->steps);
-        }    
-        lcd->setVolume(currentSequence->volume);        
+        }
+        lcd->setSteps(currentSequence->steps); 
+        lcd->setHits(currentSequence->hits); 
+        lcd->setOffset(currentSequence->patternOffset);            
     }
 
     rotary1Button.update();    
     rotary2Button.update();
     rotary3Button.update();
     rotary4Button.update();
-    if (rotary1Button.fell()){
-        euclidMode = !euclidMode;
+    if (rotary1Button.fell()) {
+        volMode = !volMode;
         Serial.println("Rotary Button 1");
-        if (euclidMode) {
-            lcd->initEuclidMode(currentSequence->steps, currentSequence->hits, currentSequence->patternOffset); 
+        if (volMode) {
+            lcd->initVolMode(currentSequence->number + 1, currentSequence->volume); 
         } else {
             lcd->initStepSequencerMode(currentSequence->pattern, currentSequence->steps);
         }
     }
 
-    // Step sequencer mode rotary2 can be used to turn hits on or off manualy
-    if (rotary2Button.fell()) {
+    // Step sequencer mode rotary4 can be used to turn hits on or off manualy
+    if (rotary4Button.fell()) {
         Serial.println("Rotary Button 2");
         Serial.println(currentSequence->getString());
         currentSequence->flipStep(lcd->cursorPosition);
@@ -290,8 +291,10 @@ void updateValues() {
         Serial.println(currentSequence->getString());
         lcd->initStepSequencerMode(currentSequence->pattern, currentSequence->steps);
     }
-    if (rotary3Button.fell()) Serial.println("Rotary Button 3");
-    if (rotary4Button.fell()) Serial.println("Rotary Button 4");
+
+    
+//    if (rotary3Button.fell()) Serial.println("Rotary Button 3");
+//    if (rotary4Button.fell()) Serial.println("Rotary Button 4");
     
 }
 
@@ -301,15 +304,15 @@ void playSamples() {
     if (tickStates[tickCount]) {
         if (tickStates[tickCount] & 1U) {
             playMem1.play(AudioSampleCabassa);       
-            Serial.println("sample1"); 
+            
         }
         if (tickStates[tickCount] & 2U){
             playMem2.play(AudioSampleConga);
-            Serial.println("sample2");
+            
         }
         if (tickStates[tickCount] & 4U){
             playMem3.play(AudioSampleWoodfeel);
-            Serial.println("sample3");
+            
         }
         if (tickStates[tickCount] & 8U){
             playMem4.play(AudioSampleWoodmpc);
@@ -339,13 +342,15 @@ void playSamples() {
  * having a total of 8 sequences. Each sequence plays a single sample. 
  * e.g if tickStates[0] = 0b00010001 then the sequence1 and sequence2's sample should
  * be played at the start of the bar
- * if tickStates[0] = 0b00010001
  * 
  * The drum machine patterns are stored this way for greater memory efficiancy since
- * the 8 samples store in RAM take a significant amount of the avaliable memory.
+ * the 8 samples stored in RAM take a significant amount of the avaliable memory.
  * By using a single byte to store if the seuquences are played on any tick using this 
  * method takes up only 4kB. If a 2D boolean array were used which would be 
  * easier to program it would take up 32kB. 
+ * It also reduces the time the interupt is called for. Only one comparison is required
+ * to check if anything needs to be played. This is preferable since the interupt is
+ * called frequently and the majority of the time nothing is played 
  */
 void writeTickStates(EuclidSequence *sequence) {
     uint16_t count = 0;
